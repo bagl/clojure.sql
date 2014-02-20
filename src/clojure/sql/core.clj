@@ -8,13 +8,6 @@
   (c.set/difference (c.set/union s1 s2)
                     (c.set/intersection s1 s2)))
 
-(defn consv-nonempty
-  "Cons an item to collection if it is nonempty"
-  [item coll]
-  (if (empty? item)
-    (vec coll)
-    (vec (cons item coll))))
-
 (defn regex-parser
   "Splits string at ':keyword' and returns splitted
   string without keywords and coll of extracted keywords"
