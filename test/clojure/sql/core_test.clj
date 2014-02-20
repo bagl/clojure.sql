@@ -6,6 +6,10 @@
   (are [param-value placeholders param-hash]
        (= param-value (substitute-with param-hash placeholders))
 
+       []
+       []
+       {}
+
        [1, 2, 3]
        [:a, :b, :c]
        {:a 1, :b 2, :c 3}
@@ -26,14 +30,40 @@
          (->question-marks [1 [1 1 1] [1 1] 1]))))
 
 (deftest test-query-vec
-  (is (= [{:fetch-size 100} "a = ? and b in (?,?,?) and c = ?", 1, 2 3 4, 5]
-         (query-vec [["a = " " and b in (" ") and c = "] [:a :bs :c]] {:a 1 :bs [2 3 4] :c 5} {:fetch-size 100}))))
+  (are [qvec splitted-sql params opts] (= qvec (query-vec splitted-sql params opts))
+    ; no params or opts
+    [{} "select"]
+    [["select"] []]
+    nil
+    nil
+
+    ; only params
+    [{} "a = ? and b in (?,?,?) and c = ?", 1, 2 3 4, 5]
+    [["a = " " and b in (" ") and c = "] [:a :bs :c]]
+    {:a 1 :bs [2 3 4] :c 5}
+    {}
+
+    ; only opts
+    [{:fetch-size 100} "select"]
+    [["select"] []]
+    nil
+    {:fetch-size 100}
+
+    ; with params and opts
+    [{:fetch-size 100} "a = ? and b in (?,?,?) and c = ?", 1, 2 3 4, 5]          
+    [["a = " " and b in (" ") and c = "] [:a :bs :c]]
+    {:a 1 :bs [2 3 4] :c 5}
+    {:fetch-size 100}))
 
 (deftest test-regex-parser
   (are [splitted-sql params sql] (= [splitted-sql params] (regex-parser sql))
        ["a = ", " and b in (", ") and c = "]
        [:a :bs :c]
        "a = :a and b in (:bs) and c = :c"
+
+       ["a = ", " and b in (", ") and c in (", ")"]
+       [:a :bs :cs]
+       "a = :a and b in (:bs) and c in (:cs)"
 
        ["a = ", " and b in (", ") and c = 1"]
        [:a :bs]
