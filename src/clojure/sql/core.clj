@@ -57,7 +57,7 @@
         sql-with-? (->> (concat (->question-marks param-values) [nil])
                         (interleave splitted-sql)
                         s/join)]
-    (into [(or opts {})] (concat [sql-with-?] (flatten param-values)))))
+    (concat [(or opts {})] [sql-with-?] (flatten param-values))))
 
 (defn query
   "Returns a query function with embedded sql, db-spec and options.
