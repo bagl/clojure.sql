@@ -54,12 +54,10 @@
   [parsed-sql-vec param-hash opts]
   (let [[splitted-sql placeholders] parsed-sql-vec
         param-values (substitute-with param-hash placeholders)
-        sql-with-? (s/join (interleave splitted-sql
-                                       (concat (->question-marks param-values) [nil]))) ; concat to make the seqs of equal length
-        qv+params (if (empty? param-hash) ; do it that late to check for unmatched params
-                      splitted-sql
-                      (into [sql-with-?] (flatten param-values)))]
-    (consv-nonempty opts qv+params)))
+        sql-with-? (->> (concat (->question-marks param-values) [nil])
+                        (interleave splitted-sql)
+                        s/join)]
+    (into [(or opts {})] (concat [sql-with-?] (flatten param-values)))))
 
 (defn query
   "Returns a query function with embedded sql, db-spec and options.
@@ -75,7 +73,7 @@
      ([params opts]
       (let [parser (get default-opts :parser regex-parser)
             db-spec (get opts :db-spec db-spec)
-            final-opts (merge (dissoc default-opts :parser) opts) ; get rid of parser as it can be quite large beast
+            final-opts (merge default-opts opts)
             query-vec (query-vec (parser sql) params final-opts)]
         `(clojure.java.jdbc/query ~db-spec ~query-vec ~@(flatten (seq final-opts))))))))
 
