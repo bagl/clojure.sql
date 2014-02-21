@@ -75,9 +75,3 @@
    `(def ~query-name (query ~db-spec ~sql)))
   ([query-name db-spec sql opts]
    `(def ~query-name (query ~db-spec ~sql ~opts))))
-
-((query 'dbs "select"))
-((query 'dbs "select :a" {:parser (fn [& all] [["ahoj"] []])}))
-((query 'dbs "select a = :a and b in (:b)" {:fetch-size 100})
- {:a 1 :b [2 3]}
- {:row-fn 'vec})
