@@ -1,6 +1,7 @@
 (ns clojure.sql.core
   (:require [clojure.string :as s]
-            [clojure.set :as c.set]))
+            [clojure.set :as c.set]
+            [clojure.java.jdbc]))
 
 (defn symmetric-diff
   "Returns a symmetric difference of two sets"
@@ -67,7 +68,8 @@
             db-spec (get final-opts :db-spec db-spec)
             parser (get final-opts :parser regex-parser)
             query-vec (query-vec (parser sql) params final-opts)]
-        `(clojure.java.jdbc/query ~db-spec ~query-vec ~@(flatten (seq final-opts))))))))
+        (apply (partial clojure.java.jdbc/query db-spec query-vec)
+               (flatten (seq final-opts))))))))
 
 (defmacro defquery
   "Defines a query function using the given name"
