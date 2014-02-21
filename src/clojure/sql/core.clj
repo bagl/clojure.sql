@@ -24,8 +24,7 @@
   [param-hash placeholders]
   (let [pars-key-set (set (keys param-hash))
         phs-key-set (set placeholders)]
-    (if (and (every? pars-key-set placeholders)
-             (every? phs-key-set (keys param-hash)))
+    (if (= pars-key-set phs-key-set)
       (map param-hash placeholders)
       (->> (symmetric-diff phs-key-set pars-key-set) ; builds and throws exception
         (format "Unmatched query parameters: %s")
