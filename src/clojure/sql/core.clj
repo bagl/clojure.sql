@@ -63,9 +63,9 @@
      ([params]
       (query* params nil))
      ([params opts]
-      (let [parser (get default-opts :parser regex-parser)
-            db-spec (get opts :db-spec db-spec)
-            final-opts (merge default-opts opts)
+      (let [final-opts (merge default-opts opts)
+            db-spec (get final-opts :db-spec db-spec)
+            parser (get final-opts :parser regex-parser)
             query-vec (query-vec (parser sql) params final-opts)]
         `(clojure.java.jdbc/query ~db-spec ~query-vec ~@(flatten (seq final-opts))))))))
 
