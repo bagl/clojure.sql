@@ -9,7 +9,7 @@ are welcome. Read the code if possible, it's under 100 LOC.
 ## Usage
 
 ```clojure
-(require '[clojure.sql.core :as sql])
+(require '[clojure.sql.core :refer [query defquery]])
 
 (def db-spec {:subprotocol "postgresql"
               :subname "//127.0.0.1:5432/test"})
