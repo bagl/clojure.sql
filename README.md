@@ -39,7 +39,7 @@ One can use the whole set of options for the jdbc/query such as this:
   "select datetime, tagname, value
   from discretehistory dh
   where timeResolution = :resolution
-    and tagname in (:tags)
+    and tagname in (:tags)"
   {:fetch-size 100 :as-arrays? true})
 
 (valve-state {:resolution 1000
