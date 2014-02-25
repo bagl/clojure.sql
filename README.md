@@ -120,5 +120,3 @@ You can run `defqueries-from-dir` and get following queries:
 (customer-credit-levels ...)
 (sales-by-salespersons ...)
 ```
-
-### Additional options
