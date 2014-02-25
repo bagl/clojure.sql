@@ -29,7 +29,13 @@
    `(def ~query-name (query ~db-spec ~sql ~opts))))
 
 (defmacro defqueries-from-dir
-  [dir-path db-spec]
+  "Defines query functions from files of raw SQL in the directory given
+  
+  Query names will be the filenames with underscores '_' replaced with dashes '-'
+  and without the '.sql' extension:
+
+    'my_query.sql' file transforms into 'my-query' function"
+  [db-spec dir-path]
   `(do
      ~@(for [[query-name sql-filepath] (sql-files-seq dir-path)]
          `(defquery ~(symbol query-name)
