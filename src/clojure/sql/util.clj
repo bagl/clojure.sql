@@ -50,3 +50,19 @@
                         (interleave splitted-sql)
                         s/join)]
     (concat [(or opts {})] [sql-with-?] (flatten param-values))))
+
+(defn list-files
+  "List files in dir recursively which ends with the extension 'ext'"
+  [dir-path ext]
+  (filter #(and (.isFile %)
+                (.endsWith (.getName %) ext))
+          (file-seq (clojure.java.io/file dir-path))))
+ 
+(defn sql-files-seq
+  "Returns a vector of query name and filepath to the SQL file"
+  [dir-path]
+  (let [strip-extension #(.substring % 0 (- (count %) (count ".sql")))
+        replace-underscores #(s/replace % #"_" "-")
+        format-name (comp replace-underscores strip-extension)]
+    (->> (list-files dir-path ".sql")
+         (map #(list (format-name (.getName %)) (.getPath %))))))

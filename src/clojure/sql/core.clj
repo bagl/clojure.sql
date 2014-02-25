@@ -27,3 +27,11 @@
    `(def ~query-name (query ~db-spec ~sql)))
   ([query-name db-spec sql opts]
    `(def ~query-name (query ~db-spec ~sql ~opts))))
+
+(defmacro defqueries-from-dir
+  [dir-path db-spec]
+  `(do
+     ~@(for [[query-name sql-filepath] (sql-files-seq dir-path)]
+         `(defquery ~(symbol query-name)
+                    ~db-spec
+                    (slurp ~sql-filepath)))))
