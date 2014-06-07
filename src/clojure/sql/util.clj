@@ -12,7 +12,7 @@
   "Splits string at ':keyword' and returns splitted
   string without keywords and coll of extracted keywords"
   [sql]
-  (let [regex #"(?<=[^:]):(\w+)"
+  (let [regex #"(?<=[^:]):([\w-]+)"
         splitted-sql (s/split sql regex)
         placeholders (map (comp keyword second) ; matched group is second element
                           (re-seq regex sql))]

@@ -67,4 +67,12 @@
 
        ["a = ", " and b in (", ") and c = 1"]
        [:a :bs]
-       "a = :a and b in (:bs) and c = 1"))
+       "a = :a and b in (:bs) and c = 1"
+       
+       ["par-1 = "]
+       [:par-1]
+       "par-1 = :par-1"
+
+       ["par_1 = "]
+       [:par_1]
+       "par_1 = :par_1"))
